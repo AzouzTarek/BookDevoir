@@ -1,11 +1,11 @@
 package com.example.book.controller;
 
 import com.example.book.model.Book;
-import com.example.book.repository.BookRepository;
+import com.example.book.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -14,38 +14,35 @@ import java.util.List;
 public class BookController {
 
     @Autowired
-    private BookRepository bookRepository;
+    private BookService bookService;
 
     @PostMapping
-    public Book createBook(@RequestBody Book book) {
-        return bookRepository.save(book);
+    public ResponseEntity<Book> createBook(@RequestBody Book book) {
+        Book createdBook = bookService.createBook(book);
+        return new ResponseEntity<>(createdBook, HttpStatus.CREATED);
     }
 
     @GetMapping
-    public List<Book> getAllBooks() {
-        return bookRepository.findAll();
+    public ResponseEntity<List<Book>> getAllBooks() {
+        List<Book> books = bookService.getAllBooks();
+        return new ResponseEntity<>(books, HttpStatus.OK);
     }
 
     @GetMapping("/{isbn}")
-    public Book getBook(@PathVariable String isbn) {
-        return bookRepository.findById(isbn)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Book not found"));
+    public ResponseEntity<Book> getBook(@PathVariable String isbn) {
+        Book book = bookService.getBookByIsbn(isbn);
+        return new ResponseEntity<>(book, HttpStatus.OK);
     }
 
     @PutMapping("/{isbn}")
-    public Book updateBook(@PathVariable String isbn, @RequestBody Book book) {
-        if (!bookRepository.existsById(isbn)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Book not found");
-        }
-        book.setIsbn(isbn);
-        return bookRepository.save(book);
+    public ResponseEntity<Book> updateBook(@PathVariable String isbn, @RequestBody Book book) {
+        Book updatedBook = bookService.updateBook(isbn, book);
+        return new ResponseEntity<>(updatedBook, HttpStatus.OK);
     }
 
     @DeleteMapping("/{isbn}")
-    public void deleteBook(@PathVariable String isbn) {
-        if (!bookRepository.existsById(isbn)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Book not found");
-        }
-        bookRepository.deleteById(isbn);
+    public ResponseEntity<Void> deleteBook(@PathVariable String isbn) {
+        bookService.deleteBook(isbn);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
