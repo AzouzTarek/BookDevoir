@@ -504,29 +504,29 @@
         // Display books
         function displayBooks(books) {
             booksContainer.innerHTML = '';
-            
+
             if (books.length === 0) {
                 displayEmptyState();
                 return;
             }
-            
+
             books.forEach(book => {
                 const bookCard = document.createElement('div');
                 bookCard.className = 'book-card';
                 bookCard.innerHTML = `
-                    <h3 class="book-title">${book.title}</h3>
-                    <p class="book-author">by ${book.author}</p>
-                    <p class="book-isbn">ISBN: ${book.isbn}</p>
-                    <div class="book-actions">
-                        <button class="btn btn-primary btn-sm edit-btn" data-isbn="${book.isbn}" data-title="${book.title}" data-author="${book.author}">Edit</button>
-                        <button class="btn btn-danger btn-sm delete-btn" data-isbn="${book.isbn}">Delete</button>
-                    </div>
-                `;
+                <h3 class="book-title">${book.title}</h3>
+                <p class="book-author">by ${book.author}</p>
+                <p class="book-isbn">ISBN: ${book.isbn}</p>
+                <div class="book-actions">
+                    <button class="btn btn-primary btn-sm edit-button" data-isbn="${book.isbn}" data-title="${book.title}" data-author="${book.author}">Edit</button>
+                    <button class="btn btn-danger btn-sm delete-button" data-isbn="${book.isbn}">Delete</button>
+                </div>
+            `;
                 booksContainer.appendChild(bookCard);
             });
-            
-            // Add event listeners to edit buttons
-            document.querySelectorAll('.edit-btn').forEach(btn => {
+
+            // Add event listeners to edit buttons - Updated class selector
+            document.querySelectorAll('.edit-button').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const isbn = this.getAttribute('data-isbn');
                     const title = this.getAttribute('data-title');
@@ -534,9 +534,9 @@
                     openEditModal(isbn, title, author);
                 });
             });
-            
-            // Add event listeners to delete buttons
-            document.querySelectorAll('.delete-btn').forEach(btn => {
+
+            // Add event listeners to delete buttons - Updated class selector
+            document.querySelectorAll('.delete-button').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const isbn = this.getAttribute('data-isbn');
                     openDeleteModal(isbn);
